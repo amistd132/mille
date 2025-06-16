@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Générateur Intuitif EuroMillions</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4; }
+    h1 { color: #333; }
+    label { display: block; margin-top: 10px; }
+    input, select, button { padding: 10px; margin-top: 5px; width: 100%; max-width: 300px; }
+    #grilles { margin-top: 20px; background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .grille { margin-bottom: 10px; padding: 10px; background: #e0f7fa; border-radius: 5px; }
+  </style>
+</head>
+<body>
+  <h1>Générateur EuroMillions - Statistiques + Intuition</h1>
+
+  <label for="nbGrilles">Nombre de grilles à générer :</label>
+  <input type="number" id="nbGrilles" value="1" min="1" max="10" />
+
+  <label for="intention">Votre intention avant de jouer :</label>
+  <input type="text" id="intention" placeholder="Ex : Abondance, liberté, etc." />
+
+  <button onclick="genererGrilles()">Générer</button>
+
+  <div id="grilles"></div>
+
+  <script>
+    function genererNumero(possibles, nb) {
+      const tirage = new Set();
+      while (tirage.size < nb) {
+        const rand = possibles[Math.floor(Math.random() * possibles.length)];
+        tirage.add(rand);
+      }
+      return Array.from(tirage).sort((a, b) => a - b);
+    }
+
+    function genererGrilles() {
+      const nb = parseInt(document.getElementById("nbGrilles").value);
+      const intention = document.getElementById("intention").value.trim();
+      const zone = document.getElementById("grilles");
+      zone.innerHTML = "";
+
+      const frequents = [20, 21, 23, 27, 17, 5, 42, 44, 50, 38, 2, 11]; // exemples
+      const etoilesFrequent = [2, 3, 8, 9, 10];
+
+      for (let i = 0; i < nb; i++) {
+        const nums = genererNumero(frequents, 5);
+        const etoiles = genererNumero(etoilesFrequent, 2);
+        const div = document.createElement("div");
+        div.className = "grille";
+        div.innerHTML = `<strong>Grille ${i + 1}</strong><br>Numéros : ${nums.join(", ")}<br>Étoiles : ${etoiles.join(", ")}<br><em>Intention : ${intention || '—'}</em>`;
+        zone.appendChild(div);
+      }
+    }
+  </script>
+</body>
+</html>
